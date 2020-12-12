@@ -45,7 +45,7 @@ class CreateOrderService {
 
     const findProducts = await this.productsRepository.findAllById(productsIDs);
 
-    if (!findProducts) {
+    if (findProducts.length === 0) {
       throw new AppError('One or more products does not exists.');
     }
 
