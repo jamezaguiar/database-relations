@@ -54,6 +54,10 @@ class CreateOrderService {
         eachProduct => eachProduct.id === product.id,
       );
 
+      if (product.quantity < products[productIndex].quantity) {
+        throw new AppError('Insufficient quantity.');
+      }
+
       return {
         product_id: product.id,
         quantity: products[productIndex].quantity,
@@ -65,6 +69,15 @@ class CreateOrderService {
       customer: findCustomer,
       products: formattedProducts,
     });
+
+    const updateQuantityArray = formattedProducts.map(product => {
+      return {
+        id: product.product_id,
+        quantity: product.quantity,
+      };
+    });
+
+    await this.productsRepository.updateQuantity(updateQuantityArray);
 
     return order;
   }
